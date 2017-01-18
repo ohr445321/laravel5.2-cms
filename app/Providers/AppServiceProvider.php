@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        /*********** 注册模型 ************/
+        $this->app->bind('UsersModel', 'App\Model\Users');
     }
 }

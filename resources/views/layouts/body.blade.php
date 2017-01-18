@@ -48,74 +48,7 @@
                 success: callback,
             });
         }
-        $(function () {
-            $('#submit').click(function () {
-                var url = $('#form').attr('action');
-                var location_href = $('#form').attr('location_href');
-                $.ajax({
-                    type: "POST",
-                    url:url,
-                    data:$('#form').serialize(),
-                    async: false,
-                    datatype:'json',
-                    success:function (return_data) {
-                        if (return_data.code == 0) {
-                            layer.msg(return_data.msg, {icon: 1,time: 1500},function(){
-                                window.location.href = location_href;
-                            });
-                        }else{
-                            layer.msg(return_data.msg, {icon: 5,time: 1500});
-                        }
-                    }
 
-                });
-            });
-
-
-            $('.article').click(function () {
-                var type = $(this).attr('article-type');
-                var url = $('#form_'+type).attr('action');
-                var data = $('#form_'+type).serialize();
-                $.ajax({
-                    type: "POST",
-                    url:url,
-                    data:data,
-                    async: false,
-                    datatype:'json',
-                    success:function (return_data) {
-                        if (return_data.code == 0) {
-                            layer.msg(return_data.msg, {icon: 1,time: 1500},function(){
-                                window.location.href = '{{ url('/admin/article/article-list') }}';
-                            });
-                        }else{
-                            layer.msg(return_data.msg, {icon: 5,time: 1500});
-                        }
-                    }
-
-                });
-            });
-
-
-            $('.change_status').click(function(event) {
-                var thisObj = $(this);
-                var data = thisObj.data();
-                //询问框
-                layer.confirm(data.text, {
-                    btn: ['确定','取消'] //按钮
-                }, function(){
-                    jsonAjax(data.url,'GET',null,'json',function(retrunData){
-                        if (retrunData.code == 0) {
-                            layer.msg(retrunData.msg, {icon: 1,time: 1000},function(){
-                                window.location.reload();  //刷新
-                            });
-                        }else{
-                            layer.msg(retrunData.msg, {icon: 5,time: 1000});
-                        }
-                    });
-
-                });
-            });
-        })
     </script>
     @yield('js')
 </div>

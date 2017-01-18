@@ -45,6 +45,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($e instanceof ScriptException) {
+            return $e->getErrorMsg();
+        }
+
+        if($e instanceof JsonException){
+            return response()->json($e->getErrorMsg());
+        }
+
         return parent::render($request, $e);
     }
 }
