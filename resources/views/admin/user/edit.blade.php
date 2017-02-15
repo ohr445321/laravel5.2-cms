@@ -114,6 +114,7 @@
                     $('#form').serializeArray().map(function(x){
                         form_data[x.name] = x.value;
                     });
+
                     if (this.vaildate()) {
                         $.post(this.dom.post_url + '/' + this.dom.id, form_data, function(msg){
                             if (msg.code == 0) {

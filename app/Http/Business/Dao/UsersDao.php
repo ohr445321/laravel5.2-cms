@@ -13,11 +13,43 @@ use Illuminate\Support\Facades\App;
 use App\Http\Common\Helper;
 use Illuminate\Support\Facades\Validator;
 use App\Exceptions\JsonException;
+use Exception;
 
 class UsersDao extends DaoBase
 {
     /**
-     * 功能：保存用户
+     * 功能：修改用户
+     * author: ouhanrong
+     * @param $id
+     * @param $data
+     * @return mixed
+     * @throws JsonException
+     */
+    public function updateUser($id, $data)
+    {
+        $data['user_id'] = $id;
+        $validator = Validator::make($data, [
+            'user_id' => ['required', 'int'],
+            'user_name' => ['required'],
+            'password' => ['required'],
+        ]);
+        if ($validator->fails()) {
+            throw new JsonException(10000, $validator->messages());
+        }
+
+        $users_model = App::make('UsersModel')->find($id);
+
+        $users_model->username = $data['user_name'];
+        $users_model->password = $data['password'];
+        if (!$users_model->save()) {
+            throw new JsonException(10004);
+        }
+
+        return $users_model;
+    }
+
+    /**
+     * 功能：添加保存用户
      * @author:     ouhanrong
      * @param $data
      * @return mixed
@@ -39,7 +71,7 @@ class UsersDao extends DaoBase
         $users_model->username = $data['user_name'];
         $users_model->password = $data['password'];
         $users_model->salt = $data['salt'];
-        
+
         if (!$users_model->save()) {
             throw new JsonException(10004);
         }
@@ -61,24 +93,25 @@ class UsersDao extends DaoBase
             'user_id' => ['required', 'int']
         ];
         $validator = Validator::make([
-            'user_id'
+            'user_id' => $user_id
         ], $check);
         if ($validator->fails()) {
             throw new JsonException('10000', $validator->messages());
         }
 
-        $user_data = App::make('UsersModel')->select($select_columns)->UserId($user_id)->first();
+        $user_data = App::make('UsersModel')->select($select_columns)->UserIdQuery($user_id)->first();
 
         return $user_data;
     }
 
     /**
      * 功能：获取用户列表信息
-     * @author:     ouhanrong
+     * author: ouhanrong
      * @param array $condition
      * @param array $select_columns
      * @param array $relatives
      * @return mixed
+     * @throws JsonException
      */
     public function getUsersList(array $condition = [], array $select_columns = ['*'], array $relatives = [])
     {

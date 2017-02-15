@@ -13,14 +13,12 @@ class Controller extends BaseController
     use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
 
     /**
-     * @author:     ouhanrong
      * 功能：return json data
-     * @param int $code
-     * @param string $msg
-     * @param array $data
+     * author: ouhanrong
+     * @param $data
      * @return array
      */
-    protected function jsonFormat($code = 0, $msg = '成功', $data = array())
+    protected function jsonFormat($data)
     {
         if(is_object($data)){
             if(method_exists($data,'toArray')){
@@ -32,9 +30,13 @@ class Controller extends BaseController
             $data = (array)$data;
         }
 
+        if(isset($data['code']) && isset($data['data'])){
+            return $data;
+        }
+
         return [
-            'code' => $code,
-            'msg'  => $msg,
+            'code' => 0,
+            'msg'  => '成功',
             'data' => $data,
         ];
     }
